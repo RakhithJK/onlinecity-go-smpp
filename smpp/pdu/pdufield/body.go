@@ -45,19 +45,24 @@ func New(n Name, data []byte) Body {
 		}
 		return &Fixed{Data: data[0]}
 	case
+		ScheduleDeliveryTime,
+		ValidityPeriod:
+		if data == nil {
+			data = []byte{}
+		}
+		return &Date{Variable: Variable{Data: data}}
+	case
 		AddressRange,
 		DestinationAddr,
 		DestinationList,
 		FinalDate,
 		MessageID,
 		Password,
-		ScheduleDeliveryTime,
 		ServiceType,
 		SourceAddr,
 		SystemID,
 		SystemType,
-		UnsuccessSme,
-		ValidityPeriod:
+		UnsuccessSme:
 		if data == nil {
 			data = []byte{}
 		}

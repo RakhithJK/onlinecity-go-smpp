@@ -161,6 +161,8 @@ var cmdShortMessage = cli.Command{
 			codec = pdutext.UCS2(text)
 		case "latin1", "latin-1":
 			codec = pdutext.Latin1(text)
+		case "gsm7":
+			codec = pdutext.GSM7(text)
 		default:
 			codec = pdutext.Raw(text)
 		}

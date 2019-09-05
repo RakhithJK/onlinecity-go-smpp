@@ -107,6 +107,57 @@ func (s Status) Error() string {
 	return m
 }
 
+const (
+	ESME_ROK              Status = 0x00000000 // No Error
+	ESME_RINVMSGLEN       Status = 0x00000001 // Message Length is invalid
+	ESME_RINVCMDLEN       Status = 0x00000002 // Command Length is invalid
+	ESME_RINVCMDID        Status = 0x00000003 // Invalid Command ID
+	ESME_RINVBNDSTS       Status = 0x00000004 // Incorrect BIND Status for given command
+	ESME_RALYBND          Status = 0x00000005 // ESME Already in Bound State
+	ESME_RINVPRTFLG       Status = 0x00000006 // Invalid Priority Flag
+	ESME_RINVREGDLVFLG    Status = 0x00000007 // Invalid Registered Delivery Flag
+	ESME_RSYSERR          Status = 0x00000008 // System Error
+	ESME_RINVSRCADR       Status = 0x0000000A // Invalid Source Address
+	ESME_RINVDSTADR       Status = 0x0000000B // Invalid Dest Addr
+	ESME_RINVMSGID        Status = 0x0000000C // Message ID is invalid
+	ESME_RBINDFAIL        Status = 0x0000000D // Bind Failed
+	ESME_RINVPASWD        Status = 0x0000000E // Invalid Password
+	ESME_RINVSYSID        Status = 0x0000000F // Invalid System ID
+	ESME_RCANCELFAIL      Status = 0x00000011 // Cancel SM Failed
+	ESME_RREPLACEFAIL     Status = 0x00000013 // Replace SM Failed
+	ESME_RMSGQFUL         Status = 0x00000014 // Message Queue Full
+	ESME_RINVSERTYP       Status = 0x00000015 // Invalid Service Type
+	ESME_RINVNUMDESTS     Status = 0x00000033 // Invalid number of destinations
+	ESME_RINVDLNAME       Status = 0x00000034 // Invalid Distribution List name
+	ESME_RINVDESTFLAG     Status = 0x00000040 // Destination flag (submit_multi)
+	ESME_RINVSUBREP       Status = 0x00000042 // Invalid ‘submit with replace’ request (i.e. submit_sm with replace_if_present_flag set)
+	ESME_RINVESMSUBMIT    Status = 0x00000043 // Invalid esm_SUBMIT field data
+	ESME_RCNTSUBDL        Status = 0x00000044 // Cannot Submit to Distribution List
+	ESME_RSUBMITFAIL      Status = 0x00000045 // submit_sm or submit_multi failed
+	ESME_RINVSRCTON       Status = 0x00000048 // Invalid Source address TON
+	ESME_RINVSRCNPI       Status = 0x00000049 // Invalid Source address NPI
+	ESME_RINVDSTTON       Status = 0x00000050 // Invalid Destination address TON
+	ESME_RINVDSTNPI       Status = 0x00000051 // Invalid Destination address NPI
+	ESME_RINVSYSTYP       Status = 0x00000053 // Invalid system_type field
+	ESME_RINVREPFLAG      Status = 0x00000054 // Invalid replace_if_present flag
+	ESME_RINVNUMMSGS      Status = 0x00000055 // Invalid number of messages
+	ESME_RTHROTTLED       Status = 0x00000058 // Throttling error (ESME has exceeded allowed message limits)
+	ESME_RINVSCHED        Status = 0x00000061 // Invalid Scheduled Delivery Time
+	ESME_RINVEXPIRY       Status = 0x00000062 // Invalid message (Expiry time)
+	ESME_RINVDFTMSGID     Status = 0x00000063 // Predefined Message Invalid or Not Found
+	ESME_RX_T_APPN        Status = 0x00000064 // ESME Receiver Temporary App Error Code
+	ESME_RX_P_APPN        Status = 0x00000065 // ESME Receiver Permanent App Error Code
+	ESME_RX_R_APPN        Status = 0x00000066 // ESME Receiver Reject Message Error Code
+	ESME_RQUERYFAIL       Status = 0x00000067 // query_sm request failed
+	ESME_RINVOPTPARSTREAM Status = 0x000000C0 // Error in the optional part of the PDU Body.
+	ESME_ROPTPARNOTALLWD  Status = 0x000000C1 // Optional Parameter not allowed
+	ESME_RINVPARLEN       Status = 0x000000C2 // Invalid Parameter Length.
+	ESME_RMISSINGOPTPARAM Status = 0x000000C3 // Expected Optional Parameter missing
+	ESME_RINVOPTPARAMVAL  Status = 0x000000C4 // Invalid Optional Parameter Value
+	ESME_RDELIVERYFAILURE Status = 0x000000FE // Delivery Failure (data_sm_resp)
+	ESME_RUNKNOWNERR      Status = 0x000000FF // Unknown Error
+)
+
 var esmeStatus = map[Status]string{
 	0x00000000: "OK",
 	0x00000001: "invalid message length",

@@ -6,8 +6,11 @@ package pdufield
 
 import (
 	"encoding/binary"
+	"fmt"
 	"io"
 	"strconv"
+	"strings"
+	"time"
 )
 
 // Name is the name of a PDU field.
@@ -404,4 +407,80 @@ func (udhl *UDHList) Bytes() []byte {
 func (udhl *UDHList) SerializeTo(w io.Writer) error {
 	_, err := w.Write(udhl.Bytes())
 	return err
+}
+
+type Date struct {
+	Variable
+	Absolute time.Time
+	Relative time.Duration
+}
+
+func (dt *Date) Parse() error {
+	str := dt.String()
+	if str == "" {
+		return nil
+	}
+	if len(str) != 16 {
+		return fmt.Errorf("date string %q is too long, expected 16", str)
+	}
+	y, err := strconv.ParseUint(str[:2], 10, 8)
+	if err != nil {
+		return err
+	}
+	m, err := strconv.ParseUint(str[2:4], 10, 8)
+	if err != nil {
+		return err
+	}
+	d, err := strconv.ParseUint(str[4:6], 10, 8)
+	if err != nil {
+		return err
+	}
+	h, err := strconv.ParseUint(str[6:8], 10, 8)
+	if err != nil {
+		return err
+	}
+	i, err := strconv.ParseUint(str[8:10], 10, 8)
+	if err != nil {
+		return err
+	}
+	s, err := strconv.ParseUint(str[10:12], 10, 8)
+	if err != nil {
+		return err
+	}
+
+	// Early return for relative dates
+	if strings.HasSuffix(str, "R") {
+		dt.Relative = (time.Duration(y)*time.Hour*24*365 +
+			time.Duration(m)*time.Hour*24*30 +
+			time.Duration(d)*time.Hour*24 +
+			time.Duration(h)*time.Hour +
+			time.Duration(i)*time.Minute +
+			time.Duration(s)*time.Second)
+		return nil
+	}
+
+	st, err := strconv.ParseUint(str[12:13], 10, 8)
+	if err != nil {
+		return err
+	}
+	ns := (time.Duration(st) * time.Second / 10).Nanoseconds()
+
+	// Parse timezone
+	off, err := strconv.ParseInt(str[13:15], 10, 8)
+	if err != nil {
+		return err
+	}
+	switch str[15:16] {
+	case "+":
+		break
+	case "-":
+		off = off * -1
+	default:
+		return fmt.Errorf("invalid offset sign %q expected '+' or '-'", str[15:16])
+	}
+
+	loc := time.FixedZone(str[15:16]+str[13:15], int((time.Duration(off) * time.Minute * 15).Seconds()))
+	dt.Absolute = time.Date(int(y)+2000, time.Month(m), int(d), int(h), int(i), int(s), int(ns), loc)
+
+	return nil
 }
