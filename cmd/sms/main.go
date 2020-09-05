@@ -16,10 +16,12 @@ import (
 	"net"
 	"os"
 	"strings"
+	"time"
 
 	"github.com/urfave/cli"
 
 	"github.com/onlinecity/go-smpp/smpp"
+	"github.com/onlinecity/go-smpp/smpp/pdu"
 	"github.com/onlinecity/go-smpp/smpp/pdu/pdufield"
 	"github.com/onlinecity/go-smpp/smpp/pdu/pdutext"
 )
@@ -63,7 +65,6 @@ func main() {
 	}
 	app.Commands = []cli.Command{
 		cmdShortMessage,
-		cmdQueryMessage,
 	}
 	app.Run(os.Args)
 }
@@ -144,7 +145,10 @@ var cmdShortMessage = cli.Command{
 			return
 		}
 		log.Println("Connecting...")
-		tx := newTransmitter(c)
+
+		rc := make(chan pdu.Body)
+
+		tx := newTransceiver(c, func(p pdu.Body) { rc <- p })
 		defer tx.Close()
 		log.Println("Connected to", tx.Addr)
 		sender := c.Args()[0]
@@ -187,41 +191,44 @@ var cmdShortMessage = cli.Command{
 			log.Fatalln("Failed:", err)
 		}
 		log.Printf("Message ID: %q", sm.RespID())
-	},
-}
 
-var cmdQueryMessage = cli.Command{
-	Name:  "query",
-	Usage: "status of short message",
-	Action: func(c *cli.Context) {
-		if len(c.Args()) != 2 {
-			fmt.Println("usage: query [sender] [message ID]")
+		// Read something
+		select {
+		case m := <-rc:
+			log.Printf("message: %+v", m)
+			if msm, msmOK := m.Fields()[pdufield.ShortMessage]; msmOK {
+				body := msm.Bytes()
+				var datacoding pdutext.DataCoding
+				if dc, ok := m.Fields()[pdufield.DataCoding]; ok {
+					datacoding = pdutext.DataCoding(dc.Raw().(uint8))
+				}
+				var message string
+				switch datacoding {
+				case pdutext.UCS2Type:
+					message = string(pdutext.UCS2(body).Decode())
+				case pdutext.ISO88595Type:
+					message = string(pdutext.ISO88595(body).Decode())
+				case pdutext.Latin1Type:
+					message = string(pdutext.Latin1(body).Decode())
+				case pdutext.DefaultType:
+					message = string(pdutext.GSM7(body).Decode())
+				}
+				if message != "" {
+					log.Printf("short message: %q", message)
+				}
+			}
+		case <-time.After(40 * time.Second):
 			return
 		}
-		log.Println("Connecting...")
-		tx := newTransmitter(c)
-		defer tx.Close()
-		log.Println("Connected to", tx.Addr)
-		sender, msgid := c.Args()[0], c.Args()[1]
-		log.Printf("Command: query %q %q", sender, msgid)
-		qr, err := tx.QuerySM(
-			sender,
-			msgid,
-			uint8(c.Int("source-addr-ton")),
-			uint8(c.Int("source-addr-npi")),
-		)
-		if err != nil {
-			log.Fatalln("Failed:", err)
-		}
-		log.Printf("Status: %#v", *qr)
 	},
 }
 
-func newTransmitter(c *cli.Context) *smpp.Transmitter {
-	tx := &smpp.Transmitter{
-		Addr:   c.GlobalString("addr"),
-		User:   os.Getenv("SMPP_USER"),
-		Passwd: os.Getenv("SMPP_PASSWD"),
+func newTransceiver(c *cli.Context, handler smpp.HandlerFunc) *smpp.Transceiver {
+	tx := &smpp.Transceiver{
+		Addr:    c.GlobalString("addr"),
+		User:    os.Getenv("SMPP_USER"),
+		Passwd:  os.Getenv("SMPP_PASSWD"),
+		Handler: handler,
 	}
 	if s := c.GlobalString("user"); s != "" {
 		tx.User = s
