@@ -12,7 +12,7 @@ import (
 )
 
 // MaxSize is the maximum size allowed for a PDU.
-const MaxSize = 4096
+const MaxSize = 65535 // 65KiB
 
 // Body is an abstract Protocol Data Unit (PDU) interface
 // for manipulating PDUs.
