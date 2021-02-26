@@ -53,6 +53,9 @@ const (
 	GSMUserData          Name = "gsm_sms_ud.udh"
 	UnsuccessSme         Name = "unsuccess_sme"
 	ValidityPeriod       Name = "validity_period"
+	ESMEAddrTON			 Name = "esme_addr_ton"
+	ESMEAddrNPI			 Name = "esme_addr_npi"
+	ESMEAddr			 Name = "esme_addr"
 )
 
 // Fixed is a PDU of fixed length.
