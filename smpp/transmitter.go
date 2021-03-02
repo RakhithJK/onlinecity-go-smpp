@@ -182,7 +182,7 @@ type ShortMessage struct {
 	Register pdufield.DeliverySetting
 
 	// Other fields, normally optional.
-	TLVFields			 pdutlv.Fields
+	TLVFields            pdutlv.Fields
 	ServiceType          string
 	SourceAddrTON        uint8
 	SourceAddrNPI        uint8

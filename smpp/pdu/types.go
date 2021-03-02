@@ -206,7 +206,6 @@ func NewCancelSM() Body {
 	return b
 }
 
-
 // CancelSMResp PDU.
 type CancelSMResp struct{ *codec }
 
