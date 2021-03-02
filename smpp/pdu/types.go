@@ -211,7 +211,7 @@ func NewCancelSM() Body {
 type CancelSMResp struct{ *codec }
 
 func newCancelSMResp(hdr *Header) *codec {
-	return &codec{h: hdr,}
+	return &codec{h: hdr}
 }
 
 func NewCancelSMResp() Body {
@@ -251,7 +251,7 @@ func NewReplaceSM() Body {
 type ReplaceSMResp struct{ *codec }
 
 func newReplaceSMResp(hdr *Header) *codec {
-	return &codec{h: hdr,}
+	return &codec{h: hdr}
 }
 
 // DataSM PDU.
@@ -285,7 +285,7 @@ func NewDataSM() Body {
 type DataSMResp struct{ *codec }
 
 func newDataSMResp(hdr *Header) *codec {
-	return &codec{h: hdr,}
+	return &codec{h: hdr}
 }
 
 func NewDataSMResp() Body {
