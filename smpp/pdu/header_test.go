@@ -84,7 +84,7 @@ func TestDecodeHeaderMax(t *testing.T) {
 		t.Fatalf("unexpected parsed header Len: %#v", h.Len)
 	}
 
-	bin[1] = 0x01  // increase CMD length beyond our max
+	bin[1] = 0x01 // increase CMD length beyond our max
 	h, err = DecodeHeader(bytes.NewBuffer(bin))
 	if err == nil {
 		t.Fatalf("unexpected parsing of big Len: %#v", h)

@@ -145,13 +145,13 @@ func Decode(r io.Reader) (Body, error) {
 	case BindReceiverRespID, BindTransceiverRespID, BindTransmitterRespID:
 		return decodeFields(newBindResp(hdr), b)
 	case CancelSMID:
-		// TODO(onlinecity): Implement CancelSM.
+		return decodeFields(newCancelSM(hdr), b)
 	case CancelSMRespID:
-		// TODO(onlinecity): Implement CancelSMResp.
+		return decodeFields(newCancelSMResp(hdr), b)
 	case DataSMID:
-		// TODO(onlinecity): Implement DataSM.
+		return decodeFields(newDataSM(hdr), b)
 	case DataSMRespID:
-		// TODO(onlinecity): Implement DataSMResp.
+		return decodeFields(newDataSMResp(hdr), b)
 	case DeliverSMID:
 		return decodeFields(newDeliverSM(hdr), b)
 	case DeliverSMRespID:
@@ -163,15 +163,15 @@ func Decode(r io.Reader) (Body, error) {
 	case GenericNACKID:
 		return decodeFields(newGenericNACK(hdr), b)
 	case OutbindID:
-		// TODO(onlinecity): Implement Outbind.
+		return decodeFields(newOutbind(hdr), b)
 	case QuerySMID:
 		return decodeFields(newQuerySM(hdr), b)
 	case QuerySMRespID:
 		return decodeFields(newQuerySMResp(hdr), b)
 	case ReplaceSMID:
-		// TODO(onlinecity): Implement ReplaceSM.
+		return decodeFields(newReplaceSM(hdr), b)
 	case ReplaceSMRespID:
-		// TODO(onlinecity): Implement ReplaceSMResp.
+		return decodeFields(newReplaceSMResp(hdr), b)
 	case SubmitMultiID:
 		return decodeFields(newSubmitMulti(hdr), b)
 	case SubmitMultiRespID:

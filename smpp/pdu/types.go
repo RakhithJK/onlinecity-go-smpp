@@ -123,6 +123,19 @@ func NewBindTransmitterResp() Body {
 	return b
 }
 
+// Outbind PDU.
+type Outbind struct{ *codec }
+
+func newOutbind(hdr *Header) *codec {
+	return &codec{
+		h: hdr,
+		l: pdufield.List{
+			pdufield.SystemID,
+			pdufield.Password,
+		},
+	}
+}
+
 // QuerySM PDU.
 type QuerySM struct{ *codec }
 
@@ -163,6 +176,119 @@ func newQuerySMResp(hdr *Header) *codec {
 // NewQuerySMResp creates and initializes a new QuerySMResp PDU.
 func NewQuerySMResp() Body {
 	b := newQuerySMResp(&Header{ID: QuerySMRespID})
+	b.init()
+	return b
+}
+
+// CancelSM PDU.
+type CancelSM struct{ *codec }
+
+func newCancelSM(hdr *Header) *codec {
+	return &codec{
+		h: hdr,
+		l: pdufield.List{
+			pdufield.ServiceType,
+			pdufield.MessageID,
+			pdufield.SourceAddrTON,
+			pdufield.SourceAddrNPI,
+			pdufield.SourceAddr,
+			pdufield.DestAddrTON,
+			pdufield.DestAddrNPI,
+			pdufield.DestinationAddr,
+		},
+	}
+}
+
+// NewCancelSM creates and initializes a new CancelSM PDU.
+func NewCancelSM() Body {
+	b := newCancelSM(&Header{ID: CancelSMID})
+	b.init()
+	return b
+}
+
+// CancelSMResp PDU.
+type CancelSMResp struct{ *codec }
+
+func newCancelSMResp(hdr *Header) *codec {
+	return &codec{h: hdr}
+}
+
+func NewCancelSMResp() Body {
+	b := newCancelSMResp(&Header{ID: CancelSMRespID})
+	b.init()
+	return b
+}
+
+// ReplaceSM PDU.
+type ReplaceSM struct{ *codec }
+
+func newReplaceSM(hdr *Header) *codec {
+	return &codec{
+		h: hdr,
+		l: pdufield.List{
+			pdufield.MessageID,
+			pdufield.SourceAddrTON,
+			pdufield.SourceAddrNPI,
+			pdufield.SourceAddr,
+			pdufield.ScheduleDeliveryTime,
+			pdufield.ValidityPeriod,
+			pdufield.RegisteredDelivery,
+			pdufield.SMDefaultMsgID,
+			pdufield.SMLength,
+			pdufield.ShortMessage,
+		},
+	}
+}
+
+func NewReplaceSM() Body {
+	b := newReplaceSM(&Header{ID: ReplaceSMID})
+	b.init()
+	return b
+}
+
+// ReplaceSMResp PDU.
+type ReplaceSMResp struct{ *codec }
+
+func newReplaceSMResp(hdr *Header) *codec {
+	return &codec{h: hdr}
+}
+
+// DataSM PDU.
+type DataSM struct{ *codec }
+
+func newDataSM(hdr *Header) *codec {
+	return &codec{
+		h: hdr,
+		l: pdufield.List{
+			pdufield.ServiceType,
+			pdufield.SourceAddrTON,
+			pdufield.SourceAddrNPI,
+			pdufield.SourceAddr,
+			pdufield.DestAddrTON,
+			pdufield.DestAddrNPI,
+			pdufield.DestinationAddr,
+			pdufield.ESMClass,
+			pdufield.RegisteredDelivery,
+			pdufield.DataCoding,
+		},
+	}
+}
+
+func NewDataSM() Body {
+	b := newDataSM(&Header{ID: DataSMID})
+	b.init()
+	return b
+}
+
+// DataSMResp PDU.
+type DataSMResp struct{ *codec }
+
+func newDataSMResp(hdr *Header) *codec {
+	return &codec{h: hdr}
+}
+
+func NewDataSMResp() Body {
+	b := newDataSMResp(&Header{ID: DataSMRespID})
 	b.init()
 	return b
 }
@@ -407,4 +533,21 @@ func NewEnquireLinkRespSeq(seq uint32) Body {
 	b := newEnquireLinkResp(&Header{ID: EnquireLinkRespID, Seq: seq})
 	b.init()
 	return b
+}
+
+// AlertNotification PDU.
+type AlertNotification struct{ *codec }
+
+func newAlertNotification(hdr *Header) *codec {
+	return &codec{
+		h: hdr,
+		l: pdufield.List{
+			pdufield.SourceAddrTON,
+			pdufield.SourceAddrNPI,
+			pdufield.SourceAddr,
+			pdufield.ESMEAddrTON,
+			pdufield.ESMEAddrNPI,
+			pdufield.ESMEAddr,
+		},
+	}
 }

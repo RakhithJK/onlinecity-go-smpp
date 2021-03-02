@@ -39,6 +39,7 @@ loop:
 			ScheduleDeliveryTime,
 			ServiceType,
 			SourceAddr,
+			ESMEAddr,
 			SystemID,
 			SystemType,
 			ValidityPeriod:
@@ -56,6 +57,8 @@ loop:
 			DataCoding,
 			DestAddrNPI,
 			DestAddrTON,
+			ESMEAddrTON,
+			ESMEAddrNPI,
 			ESMClass,
 			InterfaceVersion,
 			NumberDests,

@@ -39,6 +39,8 @@ func New(n Name, data []byte) Body {
 		SMLength,
 		SourceAddrNPI,
 		SourceAddrTON,
+		ESMEAddrNPI,
+		ESMEAddrTON,
 		UDHLength:
 		if data == nil {
 			data = []byte{0}
@@ -60,6 +62,7 @@ func New(n Name, data []byte) Body {
 		Password,
 		ServiceType,
 		SourceAddr,
+		ESMEAddr,
 		SystemID,
 		SystemType,
 		UnsuccessSme:
