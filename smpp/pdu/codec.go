@@ -139,7 +139,7 @@ func Decode(r io.Reader) (Body, error) {
 	}
 	switch hdr.ID {
 	case AlertNotificationID:
-		// TODO(onlinecity): Implement AlertNotification.
+		return decodeFields(newAlertNotification(hdr), b)
 	case BindReceiverID, BindTransceiverID, BindTransmitterID:
 		return decodeFields(newBind(hdr), b)
 	case BindReceiverRespID, BindTransceiverRespID, BindTransmitterRespID:
