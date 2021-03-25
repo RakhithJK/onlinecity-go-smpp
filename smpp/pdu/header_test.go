@@ -69,7 +69,7 @@ func TestDecodeHeaderShort(t *testing.T) {
 	}
 }
 
-func TestDecodeHeaderMax(t *testing.T) {
+func TestDecodeHeaderLenBelowMax(t *testing.T) {
 	bin := []byte{
 		0x00, 0x00, 0xFF, 0xFF, // 64KiB Len
 		0x00, 0x00, 0x00, 0x00,
@@ -83,10 +83,20 @@ func TestDecodeHeaderMax(t *testing.T) {
 	if h.Len != 65535 {
 		t.Fatalf("unexpected parsed header Len: %#v", h.Len)
 	}
+}
 
-	bin[1] = 0x01 // increase CMD length beyond our max
-	h, err = DecodeHeader(bytes.NewBuffer(bin))
+func TestDecodeHeaderLenAboveMax(t *testing.T) {
+	bin := []byte{
+		0x00, 0x01, 0x10, 0x01, // 69632 + 1 Len
+		0x00, 0x00, 0x00, 0x00,
+		0x00, 0x00, 0x00, 0x00,
+		0x00, 0x00, 0x00, 0x00,
+	}
+	h, err := DecodeHeader(bytes.NewBuffer(bin))
 	if err == nil {
 		t.Fatalf("unexpected parsing of big Len: %#v", h)
+	}
+	if h != nil {
+		t.Fatalf("unexpected header returned:, %#v", h)
 	}
 }
